@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>learn</title>
+    <link
+      rel="stylesheet"
+      href="./learn.css" />
+    <script src="./jquery.js"></script>
+  </head>
+
+  <body>
+    <div
+      class="stage"
+      id="stage">
+      <div
+        class="ground"
+        id="ground"></div>
+      <div
+        class="player"
+        id="player">
+        <div
+          class="header"
+          id="header"></div>
+        <div
+          class="body"
+          id="body"></div>
+        <div
+          class="footer"
+          id="footer"></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(function () {
+      var player = $("#player");
+      var player_height = parseInt(
+        player.css("width").substring(0, player.css("left").length - 2)
+      );
+      var move_speed = 10;
+      var jump_force = 3;
+      var jump_speed = 10;
+      var cur_left = 0;
+      var cur_bottom = 0;
+      var jump_position = [];
+      var jumped = false;
+      var jump_btn_press = false;
+      var origin_bottom = parseInt(
+        player.css("bottom").substring(0, player.css("left").length - 2)
+      );
+      addEventListener("keypress", (e) => {
+        cur_left = parseInt(
+          player.css("left").substring(0, player.css("left").length - 2)
+        );
+        cur_bottom = parseInt(
+          player.css("bottom").substring(0, player.css("bottom").length - 2)
+        );
+        var want_to_left;
+        switch (e.code) {
+          case "KeyA":
+            want_to_left = cur_left - move_speed;
+            player.css("left", want_to_left + "px");
+            break;
+          case "KeyD":
+            want_to_left = cur_left + move_speed;
+            player.css("left", want_to_left + "px");
+            break;
+          case "Space":
+            jumped = true;
+            jump_btn_press = true;
+            jump(player, cur_bottom, 1, jump_position);
+            break;
+        }
+      });
+      function jump(player, _cur_bottom, _jump_number, jump_position) {
+        var cur = _cur_bottom;
+        jump_btn_press = false;
+        var jump_height = 0;
+        var want_to_bottom = cur_bottom * jump_force;
+        var jump_interval = setInterval(() => {
+          cur += jump_speed;
+          jump_height += jump_speed;
+          jump_position.push(cur);
+          if (jump_height > jump_force * player_height) {
+            clearInterval(jump_interval);
+            fall(player, cur, jump_position);
+          }
+          console.log(jump_position);
+          player.css("bottom", cur);
+        }, jump_speed);
+      }
+      function fall(player, cur_bottom, jump_position = []) {
+        var cur = cur_bottom;
+        var want_to_bottom = origin_bottom;
+        console.log(jump_btn_press);
+        var fall_interval = setInterval(() => {
+          if (Math.abs(cur - jump_position[jump_position.length - 1]) < 0.1) {
+            jump_position.pop();
+            console.log(jump_position);
+            if (!jumped) {
+              clearInterval(fall_interval);
+            }
+            if (jump_position.length <= 0) {
+              jumped = false;
+              clearInterval(fall_interval);
+            }
+          }
+          cur -= jump_speed;
+          player.css("bottom", cur);
+        }, jump_speed);
+      }
+    });
+  </script>
+</html>

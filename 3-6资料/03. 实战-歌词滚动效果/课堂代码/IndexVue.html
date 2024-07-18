@@ -1,0 +1,89 @@
+<template>
+    <div class="container">
+        <ul ref="lyrics" class="lyrics">
+            <li v-for="(line, index) in lyrics" :key="index" :class="{ active: index === currentIndex }">{{ line.words
+                }}</li>
+        </ul>
+        <audio ref="audio" @timeupdate="setOffset">
+            <source :src="audioSrc" type="audio/mpeg">
+        </audio>
+    </div>
+</template>
+
+<script>
+    export default {
+        data()
+        {
+            return {
+                lrcData: [], // 从 parseLrc 函数中获取数据
+                currentIndex: -1,
+                audioSrc: 'path_to_audio_file.mp3', // 音频文件路径
+            };
+        },
+        mounted()
+        {
+            this.lrcData = this.parseLrc();
+            this.createLrcElements();
+        },
+        methods: {
+            parseLrc()
+            {
+                // 实现 parseLrc 函数的逻辑
+            },
+            createLrcElements()
+            {
+                // 实现 createLrcElements 函数的逻辑
+            },
+            parseTime(timeStr)
+            {
+                // 实现 parseTime 函数的逻辑
+            },
+            findIndex()
+            {
+                const curTime = this.$refs.audio.currentTime;
+                for (let i = 0; i < this.lrcData.length; i++) {
+                    if (curTime < this.lrcData[i].time) {
+                        return i - 1;
+                    }
+                }
+                return this.lrcData.length - 1;
+            },
+            setOffset()
+            {
+                const index = this.findIndex();
+                const containerHeight = this.$refs.container.clientHeight;
+                const liHeight = this.$refs.lyrics.children[0].clientHeight;
+                const maxOffset = this.$refs.lyrics.clientHeight - containerHeight;
+                let offset = liHeight * index + liHeight / 2 - containerHeight / 2;
+                offset = Math.min(Math.max(offset, 0), maxOffset);
+                this.$refs.lyrics.style.transform = `translateY(-${offset}px)`;
+                this.currentIndex = index;
+            },
+        },
+    };
+</script>
+
+<style>
+    /* 样式可以根据实际需要进行调整 */
+    .container {
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .lyrics {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        transition: transform 0.3s;
+    }
+
+    .lyrics li {
+        line-height: 2;
+    }
+
+    .lyrics li.active {
+        font-weight: bold;
+        color: #ff0000;
+    }
+</style>

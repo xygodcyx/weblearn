@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>queryCss</title>
+  </head>
+  <body>
+    <div class="wrap">wrap</div>
+  </body>
+  <script>
+    let htmlElementStr = `<div class="pikaqiu-container">
+    <div class="eye eye-left"></div>
+    <div class="eye eye-right"></div>
+    <div class="nose"></div>
+    <div class="upperLip"></div>
+    <div class="lowerLip"></div>
+    <div class="face face-left"></div>
+    <div class="face face-right"></div>
+    </div>`;
+    let htmlElementArr = [];
+    const createHtmlByHtmlStr = () => {
+      let wrap = document.createElement("div");
+      wrap.innerHTML = htmlElementStr;
+      document.body.appendChild(wrap);
+    };
+
+    let cssStr = `.pikaqiu-container {
+        position: relative;
+        width: 340px;
+        height: 250px;
+        margin: 30px auto 30px;
+      }
+      .eye {
+        position: absolute;
+        top: 20px;
+        width: 60px;
+        height: 60px;
+        border: 2px solid #000;
+        border-radius: 50%;
+        background: #2e2e2e;
+      }
+      .eye::after {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 30px;
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 50%;
+        margin-left: 8px;
+      }
+      .eye-left {
+        left: 70px;
+      }
+      .eye-right {
+        right: 70px;
+      }
+      .nose {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 50px;
+        width: 0;
+        border-top: 20px solid #000;
+        border-bottom: none;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+      }
+      .upperLip {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 80px;
+        display: flex;
+        z-index: 1;
+      }
+      .upperLip::before {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 20px;
+        border: 3px solid #000;
+        transform: rotate(-20deg);
+        border-top: none;
+        border-right: none;
+        border-bottom-left-radius: 76% 96%;
+        background: #ffe000;
+      }
+      .upperLip::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 20px;
+        border: 3px solid #000;
+        transform: rotate(20deg);
+        border-top: none;
+        border-left: none;
+        border-bottom-right-radius: 76% 96%;
+        background: #ffe000;
+      }
+      .lowerLip {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 88px;
+        width: 124px;
+        height: 150px;
+        background: #9d0512;
+        border: 2px solid #000;
+        border-top: none;
+        border-bottom-left-radius: 62px 150px;
+        border-bottom-right-radius: 62px 150px;
+        overflow: hidden;
+      }
+      .lowerLip:after {
+        content: "";
+        display: block;
+        width: 166px;
+        height: 166px;
+        border-radius: 50%;
+        background: #fc4653;
+        margin: 22px auto 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .face {
+        position: absolute;
+        bottom: 20px;
+        width: 80px;
+        height: 80px;
+        background: #fb0d1c;
+        border: 2px solid #000;
+        border-radius: 50%;
+      }
+      .face-left {
+        left: 10px;
+      }
+      .face-right {
+        right: 10px;
+      }`;
+
+    function cssStr2cssArr() {
+      let cssArr = cssStr.split(/}/);
+      for (let i = 0; i < cssArr.length; i++) {
+        const css = cssArr[i].trim() + "}";
+        cssStr2CssHasSelect(css);
+      }
+    }
+    cssStr2cssArr();
+    function cssStr2CssHasSelect(cssStr) {
+      cssStr = cssStr.trim();
+      let selectStart = cssStr.indexOf(".");
+      let selectEnd = cssStr.indexOf("{");
+      let select = cssStr.slice(selectStart, selectEnd);
+
+      console.log(select);
+
+      let cssStart = cssStr.indexOf("{");
+      let cssEnd = cssStr.indexOf("}");
+      let css = cssStr.slice(cssStart + 1, cssEnd);
+      console.log(css);
+    }
+    //     cssStr2CssHasSelect();
+
+    function getHtmlElementClassName(htmlElementStr) {
+      let htmlClass = htmlElementStr.indexOf("id");
+      let classNameIndex1 = htmlElementStr.indexOf('"', htmlClass);
+      let classNameIndex2 = htmlElementStr.indexOf('"', classNameIndex1 + 1);
+      let className = htmlElementStr.slice(
+        classNameIndex1 + 1,
+        classNameIndex2
+      );
+      return className;
+    }
+    //     createHtmlByHtmlStr();
+  </script>
+</html>

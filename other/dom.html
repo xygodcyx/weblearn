@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <span id="span">12</span>
+
+    <script>
+      let span = document.getElementById("span");
+      let cssText = "";
+      setTimeout(() => {
+        cssText = "font-size:20px";
+        span.style.cssText = cssText;
+      }, 1000);
+      setTimeout(() => {
+        cssText += ";color:red";
+        span.style.cssText = cssText;
+      }, 1600);
+    </script>
+  </body>
+</html>

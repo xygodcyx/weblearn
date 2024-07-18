@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>timer_out_test</title>
+  </head>
+  <body>
+    <h1 id="h1">hello world1</h1>
+    <h1 id="h2">hello world2</h1>
+    <button id="btn1">change1</button>
+    <button id="btn2">change2</button>
+    <script>
+      //var 和 let 的终极区别
+      // 关于forvar循环里的的定时器执行：就是说有个消息队列，在forvar函数执行开始的时候先把循环加入到这个消息队列里，然后又把定时器添加消息队列里，但是定时器排在循环后面，他们都在等待浏览器的主线程执行，最先执行的是循环，然后是定时器，循环创建了一个forvar函数作用域里的全局变量i，等待循环执行完毕的时候，因为循环执行完毕的时候还在函数内部，所以还处于这个函数作用域里，i没有被销毁，所以定时器的回调函数还可以获取到这个变量，但是因为定时器在消息队列里的顺序在循环后面，所以此时i的值已经变成了4，当执行4个定时器的时候，同时打印了4次4。
+      // 至于为什么用forlet的执行结果是正确的，我的理解是：因为用let创建的变量是块级作用域，所以每次川籍你定时器里的都是i一个全新的i变量，这个值不会因为后面的循环改变，所以每个定时器里的i都是一个独立的i，变量的值也是每次循环传进来的值。
+
+      let h1 = document.getElementById("h1");
+      let h2 = document.getElementById("h2");
+      let btn1 = document.getElementById("btn1");
+      let btn2 = document.getElementById("btn2");
+
+      function delay(duration) {
+        let start = Date.now();
+        while (Date.now() - start < duration) {}
+      }
+
+      function ForVar() {
+        for (var i = 0; i < 4; i++) {
+          setTimeout(() => {
+            setTimeout(console.log(i), 0);
+          }, 1000);
+        }
+      }
+
+      function ForLet() {
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            setTimeout(console.log(i), 0);
+          }, 1000);
+        }
+      }
+
+      // ForVar();
+      // ForLet();
+
+      //消息队列，添加了两个延时任务，要等待6000ms才能继续向下执行，完美的诠释了消息队列！！！
+
+      btn1.onclick = function () {
+        h1.textContent = "hello XyGod1";
+        delay(3000);
+      };
+
+      btn2.onclick = function () {
+        h2.textContent = "hello XyGod2";
+        delay(3000);
+      };
+    </script>
+  </body>
+</html>
